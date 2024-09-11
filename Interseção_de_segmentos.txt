@@ -1,0 +1,114 @@
+function Som(v1, v2){
+  return [v1[0] + v2[0], v1[1] + v2[1]]
+}
+
+function Sub(v1, v2){
+  return [v1[0] - v2[0], v1[1] - v2[1]]
+}
+
+function Vet(v1, v2){
+  return ( v1[0]*v2[1] - v1[1]*v2[0] )
+}
+
+let a,b,c,d
+
+function setup() {
+  createCanvas(400, 400);
+  a = [random(50, 350), random(50, 350)]
+  b = [random(50, 350), random(50, 350)]
+  c = [random(50, 350), random(50, 350)]
+  d = [random(50, 350), random(50, 350)]
+}
+
+function draw() {
+  background(255);
+  text("A", a[0], a[1])
+  text("B", b[0], b[1])
+  text("C", c[0], c[1])
+  text("D", d[0], d[1])
+  stroke(0)
+  fill(0)
+  text("Clique na tela para atualizar as retas", 20, 20)
+  
+  if(Intersection(a, b, c, d)){
+    stroke(255, 0, 0)
+  }else{
+    stroke(0, 255, 0)
+  }
+  
+  line(a[0], a[1], b[0], b[1])
+  line(c[0], c[1], d[0], d[1])
+  
+  let intersecaoPonto = pontoIntersecao(a, b, c, d);
+
+  if (intersecaoPonto) {
+    fill(255, 0, 0);
+    ellipse(intersecaoPonto[0], intersecaoPonto[1], 5, 5);
+  }
+  
+  
+}
+
+function mousePressed(){
+  a = [random(50, 350), random(50, 350)]
+  b = [random(50, 350), random(50, 350)]
+  c = [random(50, 350), random(50, 350)]
+  d = [random(50, 350), random(50, 350)]
+}
+
+function Intersection(a, b, c, d){
+  //vetor AB
+  let ab = Sub(b, a)
+  
+  //A até C e A até D
+  let ac = Sub(c, a)
+  let ad = Sub(d, a)
+  
+  //vetor CD
+  let cd = Sub(d, c)
+  
+  //C até A e C até B
+  let ca = Sub(a, c)
+  let cb = Sub(b, c)
+  
+  //produto vetorial de AB com AC e AB com AD
+  let cross1 = Vet(ab, ac)
+  let cross2 = Vet(ab, ad)
+  
+  //produto vetorial de CD com CA e CD com CB
+  let cross3 = Vet(cd, ca)
+  let cross4 = Vet(cd, cb)
+  
+  return cross1 * cross2 < 0 && cross3 * cross4 < 0
+}
+
+function pontoIntersecao(A, B, C, D) {
+  if (!Intersection(A, B, C, D)) 
+    return null
+
+  let AB = Sub(B, A)
+  let CD = Sub(D, C)
+  let AC = Sub(C, A)
+
+  let det = Vet(AB, CD)
+  let t = Vet(AC, CD) / det
+
+  return Som(A, [t * AB[0], t * AB[1]])
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
